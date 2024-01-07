@@ -20,10 +20,13 @@ using Cocona.Hosting;
 using Cocona.ShellCompletion;
 using Cocona.ShellCompletion.Candidate;
 using Cocona.ShellCompletion.Generators;
+using Cocona.Documentation;
+
 #if !COCONA_LITE
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using Cocona.Documentation;
 #endif
 
 #if COCONA_LITE
@@ -89,6 +92,7 @@ public static class CoconaServiceCollectionExtensions
         services.TryAddTransient<ICoconaCommandResolver, CoconaCommandResolver>();
         services.TryAddTransient<ICoconaHelpRenderer, CoconaHelpRenderer>();
         services.TryAddTransient<ICoconaCommandHelpProvider, CoconaCommandHelpProvider>();
+        services.TryAddTransient<ICoconaCommandDocumentationProvider, CoconaCommandMarkdownProvider>();
         services.TryAddTransient<ICoconaHelpMessageBuilder, CoconaHelpMessageBuilder>();
 
         services.TryAddTransient<CoconaLocalizerWrapper, CoconaLocalizerWrapper>();

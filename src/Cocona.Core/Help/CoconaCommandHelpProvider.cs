@@ -22,84 +22,12 @@ public class CoconaCommandHelpProvider : ICoconaCommandHelpProvider
         _localizer = new CoconaLocalizerWrapper(_serviceProvider);
     }
 
-    private string CreateUsageCommandOptionsAndArgs(CommandDescriptor command, IReadOnlyList<CommandDescriptor> subCommandStack)
-    {
-        var sb = new StringBuilder();
-        sb.Append(_applicationMetadataProvider.GetExecutableName());
-
-        if (subCommandStack.Count > 0)
-        {
-            sb.Append(" ");
-            sb.Append(string.Join(" ", subCommandStack.Select(x => x.Name)));
-        }
-
-        if (!command.IsPrimaryCommand)
-        {
-            sb.Append(" ");
-            sb.Append(command.Name);
-        }
-
-        if (command.Options.Any(x => !x.IsHidden))
-        {
-            foreach (var opt in command.Options.Where(x => !x.IsHidden))
-            {
-                sb.Append(" ");
-                if (opt.UnwrappedOptionType == typeof(bool))
-                {
-                    if (opt.DefaultValue.HasValue && opt.DefaultValue.Value != null && opt.DefaultValue.Value.Equals(true))
-                    {
-                        sb.Append($"[--{opt.Name}=<true|false>]");
-                    }
-                    else
-                    {
-                        sb.Append($"[--{opt.Name}]");
-                    }
-                }
-                else if (opt.IsEnumerableLike)
-                {
-                    sb.Append($"[--{opt.Name} <{opt.ValueName}>...]");
-                }
-                else
-                {
-                    sb.Append($"[--{opt.Name} <{opt.ValueName}>]");
-                }
-            }
-        }
-
-        if (command.OptionLikeCommands.Any(x => !x.IsHidden))
-        {
-            foreach (var opt in command.OptionLikeCommands.Where(x => !x.IsHidden))
-            {
-                sb.Append(" ");
-                sb.Append($"[--{opt.Name}]");
-            }
-        }
-
-        if (command.Arguments.Any())
-        {
-            foreach (var arg in command.Arguments)
-            {
-                sb.Append(" ");
-                if (arg.IsEnumerableLike)
-                {
-                    sb.Append($"{arg.Name}0 ... {arg.Name}N");
-                }
-                else
-                {
-                    sb.Append(arg.Name);
-                }
-            }
-        }
-
-        return sb.ToString();
-    }
-
     public HelpMessage CreateCommandHelp(CommandDescriptor command, IReadOnlyList<CommandDescriptor> subCommandStack)
     {
         var help = new HelpMessage();
 
         // Usage
-        help.Children.Add(new HelpSection(HelpSectionId.Usage, new HelpUsage(string.Format(Strings.Help_Index_Usage, CreateUsageCommandOptionsAndArgs(command, subCommandStack)))));
+        help.Children.Add(new HelpSection(HelpSectionId.Usage, new HelpUsage(string.Format(Strings.Help_Index_Usage, _applicationMetadataProvider.BuildUsageCommandOptionsAndArgs(command, subCommandStack)))));
 
         // Description
         if (!string.IsNullOrWhiteSpace(command.Description))
@@ -136,7 +64,7 @@ public class CoconaCommandHelpProvider : ICoconaCommandHelpProvider
         }
         if (commandCollection.Primary != null && (commandCollection.All.Count == 1 || commandCollection.Primary.Options.Any() || commandCollection.Primary.Arguments.Any()))
         {
-            usageSection.Children.Add(new HelpUsage(string.Format(Strings.Help_Index_Usage, CreateUsageCommandOptionsAndArgs(commandCollection.Primary, subCommandStack))));
+            usageSection.Children.Add(new HelpUsage(string.Format(Strings.Help_Index_Usage, _applicationMetadataProvider.BuildUsageCommandOptionsAndArgs(commandCollection.Primary, subCommandStack))));
         }
         help.Children.Add(usageSection);
 
@@ -226,7 +154,7 @@ public class CoconaCommandHelpProvider : ICoconaCommandHelpProvider
                             .Select((x, i) =>
                                 new HelpLabelDescriptionListItem(
                                     $"{i}: {x.Name}",
-                                    BuildParameterDescription(_localizer.GetArgumentDescription(command, x), x.IsRequired, x.UnwrappedArgumentType, x.DefaultValue)
+                                    CoconaLabelBuilder.BuildParameterDescription(_localizer.GetArgumentDescription(command, x), x.IsRequired, x.UnwrappedArgumentType, x.DefaultValue)
                                 )
                             )
                             .ToArray()
@@ -249,12 +177,12 @@ public class CoconaCommandHelpProvider : ICoconaCommandHelpProvider
                             .Select((x, i) =>
                                 x is CommandOptionDescriptor option
                                     ? new HelpLabelDescriptionListItem(
-                                        BuildParameterLabel(option),
-                                        BuildParameterDescription(_localizer.GetOptionDescription(command, x), option.IsRequired, option.UnwrappedOptionType, option.DefaultValue)
+                                        option.BuildParameterLabel(),
+                                        CoconaLabelBuilder.BuildParameterDescription(_localizer.GetOptionDescription(command, x), option.IsRequired, option.UnwrappedOptionType, option.DefaultValue)
                                     )
                                     : x is CommandOptionLikeCommandDescriptor optionLikeCommand
                                         ? new HelpLabelDescriptionListItem(
-                                            BuildParameterLabel(optionLikeCommand),
+                                            optionLikeCommand.BuildParameterLabel(),
                                             _localizer.GetCommandDescription(optionLikeCommand.Command)
                                         )
                                         : throw new NotSupportedException()
@@ -266,41 +194,5 @@ public class CoconaCommandHelpProvider : ICoconaCommandHelpProvider
         }
     }
 
-    private string BuildParameterLabel(CommandOptionDescriptor option)
-    {
-        return (option.ShortName.Any() ? string.Join(", ", option.ShortName.Select(x => $"-{x}")) + ", " : "") +
-               $"--{option.Name}" +
-               (
-                   option.UnwrappedOptionType == typeof(bool)
-                       ? option.DefaultValue.HasValue && option.DefaultValue.Value != null && option.DefaultValue.Value.Equals(true)
-                           ? "=<true|false>"
-                           : ""
-                       : option.IsEnumerableLike
-                           ? $" <{option.ValueName}>..."
-                           : $" <{option.ValueName}>"
-               );
-    }
 
-
-    private string BuildParameterLabel(CommandOptionLikeCommandDescriptor optionLikeCommand)
-    {
-        return (optionLikeCommand.ShortName.Any() ? string.Join(", ", optionLikeCommand.ShortName.Select(x => $"-{x}")) + ", " : "") +
-               $"--{optionLikeCommand.Name}";
-    }
-
-    private string BuildParameterDescription(string description, bool isRequired, Type valueType, CoconaDefaultValue defaultValue)
-    {
-        return 
-            description +
-            (isRequired
-                ? string.Format(" ({0})", Strings.Help_Description_Required)
-                : (valueType == typeof(bool) && defaultValue.Value != null && defaultValue.Value.Equals(false))
-                    ? ""
-                    : (defaultValue.Value is null || (defaultValue.Value is string defaultValueStr && string.IsNullOrEmpty(defaultValueStr)))
-                        ? ""
-                        : (" " + string.Format("({0}: {1})", Strings.Help_Description_Default, defaultValue.Value))) +
-            (valueType.IsEnum
-                ? " " + string.Format("({0}: {1})", Strings.Help_Description_AllowedValues, string.Join(", ", Enum.GetNames(valueType)))
-                : "");
-    }
 }

@@ -160,7 +160,7 @@ namespace Cocona.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Error: {0}.
         /// </summary>
         internal static string Dispatcher_Error_CommandNotFound {
             get {
@@ -169,7 +169,7 @@ namespace Cocona.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Error: &apos;{0}&apos; is not a command. See &apos;--help&apos; for usage..
         /// </summary>
         internal static string Dispatcher_Error_NotACommand {
             get {
@@ -178,7 +178,7 @@ namespace Cocona.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Similar commands:.
         /// </summary>
         internal static string Dispatcher_Error_SimilarCommands {
             get {
@@ -264,6 +264,51 @@ namespace Cocona.Resources {
         internal static string Help_Index_Usage_Multple {
             get {
                 return ResourceManager.GetString("Help_Index_Usage_Multple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        internal static string Markdown_Heading_ApplicationDescription {
+            get {
+                return ResourceManager.GetString("Markdown_Heading_ApplicationDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Arguments.
+        /// </summary>
+        internal static string Markdown_Heading_Arguments {
+            get {
+                return ResourceManager.GetString("Markdown_Heading_Arguments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        internal static string Markdown_Heading_CommandDescription {
+            get {
+                return ResourceManager.GetString("Markdown_Heading_CommandDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Options.
+        /// </summary>
+        internal static string Markdown_Heading_Options {
+            get {
+                return ResourceManager.GetString("Markdown_Heading_Options", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Command structure.
+        /// </summary>
+        internal static string Markdown_Heading_Usage {
+            get {
+                return ResourceManager.GetString("Markdown_Heading_Usage", resourceCulture);
             }
         }
         

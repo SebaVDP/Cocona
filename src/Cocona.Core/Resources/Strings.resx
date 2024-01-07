@@ -148,45 +148,60 @@
     <value>A method of option-like command '{0}' was not found in '{1}'</value>
   </data>
   <data name="BuiltIn_Command_Completion_Description" xml:space="preserve">
-      <value>Generate a shell completion code</value>
+    <value>Generate a shell completion code</value>
   </data>
   <data name="BuiltIn_Command_CompletionCanditates_Description" xml:space="preserve">
-      <value>Generate a shell completion candidates</value>
+    <value>Generate a shell completion candidates</value>
   </data>
   <data name="BuiltIn_Command_Completion_Error_NotSupported" xml:space="preserve">
-      <value>Error: Shell completion for '{0}' is not supported. (Supported shells: {1})</value>
+    <value>Error: Shell completion for '{0}' is not supported. (Supported shells: {1})</value>
   </data>
   <data name="Help_Index_Usage_Multple" xml:space="preserve">
-      <value>Usage: {0} {1}[command]</value>
+    <value>Usage: {0} {1}[command]</value>
   </data>
   <data name="Help_Index_Usage" xml:space="preserve">
-      <value>Usage: {0}</value>
+    <value>Usage: {0}</value>
   </data>
   <data name="Help_Heading_Commands" xml:space="preserve">
-      <value>Commands:</value>
+    <value>Commands:</value>
   </data>
   <data name="Help_Heading_Arguments" xml:space="preserve">
-      <value>Arguments:</value>
+    <value>Arguments:</value>
   </data>
   <data name="Help_Heading_Options" xml:space="preserve">
-      <value>Options:</value>
+    <value>Options:</value>
   </data>
   <data name="Help_Description_Required" xml:space="preserve">
-      <value>Required</value>
+    <value>Required</value>
   </data>
   <data name="Help_Description_Default" xml:space="preserve">
-      <value>Default</value>
+    <value>Default</value>
   </data>
   <data name="Help_Description_AllowedValues" xml:space="preserve">
-      <value>Allowed values</value>
+    <value>Allowed values</value>
   </data>
   <data name="Dispatcher_Error_CommandNotFound" xml:space="preserve">
-      <value>Error: {0}</value>
+    <value>Error: {0}</value>
   </data>
   <data name="Dispatcher_Error_NotACommand" xml:space="preserve">
-      <value>Error: '{0}' is not a command. See '--help' for usage.</value>
+    <value>Error: '{0}' is not a command. See '--help' for usage.</value>
   </data>
   <data name="Dispatcher_Error_SimilarCommands" xml:space="preserve">
-      <value>Similar commands:</value>
+    <value>Similar commands:</value>
+  </data>
+  <data name="Markdown_Heading_ApplicationDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Markdown_Heading_Arguments" xml:space="preserve">
+    <value>Arguments</value>
+  </data>
+  <data name="Markdown_Heading_Options" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="Markdown_Heading_Usage" xml:space="preserve">
+    <value>Command structure</value>
+  </data>
+  <data name="Markdown_Heading_CommandDescription" xml:space="preserve">
+    <value>Description</value>
   </data>
 </root>
